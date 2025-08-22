@@ -51,17 +51,6 @@ module.exports = config([
     },
   },
   {
-    files: [
-      // Browser versions of files cannot follow the camelCase naming scheme
-      '**/*-browser.ts',
-      // The funding YAML file needs the specific uppercase name
-      '.github/FUNDING.yml',
-    ],
-    rules: {
-      'unicorn/filename-case': 'off',
-    },
-  },
-  {
     // Only the packager makes use of dynamic require
     files: [
       'packages/packager/bin/package.ts',
@@ -115,16 +104,6 @@ module.exports = config([
     },
   },
   {
-    // Webpack configurations
-    files: [
-      '**/webpack.config.ts',
-    ],
-    rules: {
-      'import/extensions': 'off',
-      'import/no-nodejs-modules': 'off',
-    },
-  },
-  {
     // Karma config and Lerna custom script because they have identical rules
     files: [
       'lerna-custom-script.js',
@@ -157,8 +136,6 @@ module.exports = config([
     ignores: [
       // The engine bundles are auto-generated code
       'engines/*/engine-default.js',
-      'engines/*/engine-browser.js',
-      'engines/*/comunica-browser.js',
       // The performance combination files are auto-generated
       'performance/*/combinations/**',
       // TODO: Remove this once solid-client-authn supports node 18.
