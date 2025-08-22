@@ -1,0 +1,50 @@
+{
+  "name": "@comunica/config-query-sparql-graphql",
+  "version": "4.2.0",
+  "description": "default configuration files for Comunica SPARQL GraphQL engine",
+  "lsd:module": true,
+  "license": "MIT",
+  "funding": {
+    "type": "opencollective",
+    "url": "https://opencollective.com/comunica-association"
+  },
+  "homepage": "https://comunica.dev/",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/ponachte/comunica-feature-graphql",
+    "directory": "engines/config-query-sparql-graphql"
+  },
+  "bugs": {
+    "url": "https://github.com/ponachte/comunica-feature-graphql/issues"
+  },
+  "keywords": [
+    "comunica",
+    "sparql",
+    "engine",
+    "query",
+    "update",
+    "config",
+    "graphql"
+  ],
+  "sideEffects": false,
+  "main": "lib/index.js",
+  "typings": "lib/index",
+  "publishConfig": {
+    "access": "public"
+  },
+  "files": [
+    "components",
+    "config",
+    "lib/**/*.d.ts",
+    "lib/**/*.js",
+    "lib/**/*.js.map"
+  ],
+  "scripts": {
+    "build": "npm run build:ts && npm run build:components",
+    "build:ts": "node \"../../node_modules/typescript/bin/tsc\"",
+    "build:components": "componentsjs-generator"
+  },
+  "dependencies": {
+    "@comunica/config-query-sparql": "~4.2.0"
+  }
+}

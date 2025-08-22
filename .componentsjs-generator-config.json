@@ -1,0 +1,14 @@
+{
+  "source": "lib",
+  "ignorePackagePaths": [
+    "engines/query-sparql-graphql"
+  ],
+  "ignoreComponents": [
+    "AsyncResourceIterator",
+    "QuerySourceGraphql",
+    "ResourceToBindingsIterator",
+    "SparqlQueryConverter",
+    "SchemaKeys"
+  ],
+  "modulePrefix": {}
+}
