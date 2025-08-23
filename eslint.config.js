@@ -35,6 +35,12 @@ module.exports = config([
     },
   },
   {
+    files: [ 'lerna.json' ],
+    rules: {
+      'style/eol-last': 'off',
+    },
+  },
+  {
     // Specific rules for NodeJS-specific files
     files: [
       '**/test/**/*.ts',
