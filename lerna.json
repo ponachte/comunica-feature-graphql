@@ -7,19 +7,14 @@
       ],
       "message": "Bump to release version %s",
       "allowBranch": [
-        "master",
-        "next/major",
-        "feature/adaptive-join",
-        "feature/optimize-sparql-fed",
-        "feature/*"
+        "main"
       ],
       "npmClient": "npm"
     }
   },
   "packages": [
     "engines/*",
-    "packages/*",
-    "performance/*"
+    "packages/*"
   ],
   "version": "4.1.0",
   "loglevel": "success",
