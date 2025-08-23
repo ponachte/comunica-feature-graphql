@@ -1,6 +1,6 @@
 {
   "name": "@comunica/actor-query-source-identify-graphql",
-  "version": "4.2.0",
+  "version": "4.1.1",
   "description": "A graphql query-source-identify actor",
   "lsd:module": true,
   "license": "MIT",
