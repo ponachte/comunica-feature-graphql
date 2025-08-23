@@ -7,11 +7,7 @@
       ],
       "message": "Bump to release version %s",
       "allowBranch": [
-        "master",
-        "next/major",
-        "feature/adaptive-join",
-        "feature/optimize-sparql-fed",
-        "feature/*"
+        "main"
       ],
       "npmClient": "npm"
     }
