@@ -1,5 +1,4 @@
 {
-  "private": true,
   "packageManager": "yarn@1.22.22",
   "repository": "https://github.com/ponachte/comunica-feature-graphql",
   "workspaces": [
