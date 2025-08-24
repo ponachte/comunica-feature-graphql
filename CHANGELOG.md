@@ -1,6 +1,19 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+<a name="v4.1.2"></a>
+## [v4.1.2](https://github.com/ponachte/comunica-feature-graphql/compare/v4.1.0...v4.1.2) - 2025-08-24
+
+### TODO: categorize commits, choose titles from: Added, Changed, Deprecated, Removed, Fixed, Security.
+* [fix pre-commit typo](https://github.com/ponachte/comunica-feature-graphql/commit/e1a0fbd07d753f887db6417ad1003e75e4fb1f3b)
+* [skip publish coverage test](https://github.com/ponachte/comunica-feature-graphql/commit/19c36aa028189f6c4819a1f80871b082ece80f0b)
+* [debug async resource it test](https://github.com/ponachte/comunica-feature-graphql/commit/58a7cbabe39e79e7b047fe0056fbb82b2dd9434c)
+* [add tests](https://github.com/ponachte/comunica-feature-graphql/commit/ce55593bcd2ddc9862d4cd64bc423ac263b1410d)
+* [update eslint config](https://github.com/ponachte/comunica-feature-graphql/commit/fe38e1090abc94ccadbef1aba5a45090f09777be)
+* [update eslint config](https://github.com/ponachte/comunica-feature-graphql/commit/53a0b3bcf4113eb3a8ff8ce21c394076082d8bfd)
+* [chore: init changelog](https://github.com/ponachte/comunica-feature-graphql/commit/66739605014938b63070d93a3d0883a69b7490c6)
+* [update lerna config](https://github.com/ponachte/comunica-feature-graphql/commit/95eac19a7edddcdf39405614bed2919976ea132b)
+
 <a name="v4.1.1"></a>
 ## [v4.1.1](https://github.com/ponachte/comunica-feature-graphql/compare/v4.1.0...v4.1.1) - 2025-08-24
 

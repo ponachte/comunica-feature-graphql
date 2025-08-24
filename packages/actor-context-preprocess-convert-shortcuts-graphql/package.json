@@ -1,6 +1,6 @@
 {
   "name": "@comunica/actor-context-preprocess-convert-shortcuts-graphql",
-  "version": "4.1.1",
+  "version": "4.1.2",
   "description": "A convert-shortcuts context-preprocess actor for the SPARQL GraphQl engine",
   "lsd:module": true,
   "license": "MIT",
