@@ -2,6 +2,7 @@
   "name": "@comunica/config-query-sparql-graphql",
   "version": "4.1.3",
   "description": "default configuration files for Comunica SPARQL GraphQL engine",
+  "private": false,
   "lsd:module": true,
   "license": "MIT",
   "funding": {

@@ -2,6 +2,7 @@
   "name": "@comunica/query-sparql-graphql",
   "version": "4.1.3",
   "description": "A Comunica engine to enable SPARQL queries over GraphQL endpoints",
+  "private": false,
   "lsd:module": true,
   "license": "MIT",
   "funding": {
