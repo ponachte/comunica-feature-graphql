@@ -233,7 +233,7 @@ export class AsyncResourceIterator extends BufferedIterator<Resource> {
         index++;
       }
 
-      throw new Error(`Unable to update query ${query} with cursor ${newCursor} at path ${path}`);
+      throw new Error(`Unable to update query with cursor ${newCursor} at path ${path}`);
     }
 
     return insertCursorAtField(query, pathParts);

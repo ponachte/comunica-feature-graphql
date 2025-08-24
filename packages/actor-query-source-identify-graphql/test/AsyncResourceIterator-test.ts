@@ -218,7 +218,7 @@ describe('_updateCursorInQuery', () => {
     expect(() => {
       (<any>iterator)._updateCursorInQuery(query, path, cursor);
     }).toThrow(
-      new RegExp(`Unable to update query ${query} with cursor ${cursor} at path ${path}`, 'u'),
+      new RegExp(`Unable to update query with cursor ${cursor} at path ${path}`, 'u'),
     );
   });
 });
