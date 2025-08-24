@@ -42,10 +42,11 @@ export class ActorOptimizeQueryOperationAssignSourcesExhaustive extends ActorOpt
     }
     if (sources.length === 1) {
       const sourceWrapper = sources[0];
+      const shape = shapes[0];
       const destination: IDataDestination | undefined = action.context.get(KeysRdfUpdateQuads.destination);
       if (!destination || sourceWrapper.source.referenceValue === getDataDestinationValue(destination)) {
         try {
-          if (doesShapeAcceptOperation(shapes[0], action.operation)) {
+          if (doesShapeAcceptOperation(shape, action.operation)) {
             return {
               operation: assignOperationSource(action.operation, sourceWrapper),
               context: action.context,
@@ -96,7 +97,7 @@ export class ActorOptimizeQueryOperationAssignSourcesExhaustive extends ActorOpt
           recurse: false,
         };
       },
-      [Algebra.types.BGP](subOperation, factory) {
+      [Algebra.types.BGP](subOperation, _factory) {
         // If the source(s) accept a BGP, calculate this instead of single patterns
         // Comunica will handle the parent query operations
         if (sources.length === 1) {
@@ -112,19 +113,7 @@ export class ActorOptimizeQueryOperationAssignSourcesExhaustive extends ActorOpt
           };
         }
 
-        // For multiple sources: check if all shapes accept the subOperation
-        const allAccept = shapes.every(shape => doesShapeAcceptOperation(shape, subOperation));
-
-        if (allAccept) {
-          return {
-            result: factory.createUnion(
-              sources.map(source => assignOperationSource(subOperation, source)),
-            ),
-            recurse: false,
-          };
-        }
-
-        // If not all accept, return subOperation with recurse true
+        // Multiple sources need to be split into patterns
         return {
           result: subOperation,
           recurse: true,

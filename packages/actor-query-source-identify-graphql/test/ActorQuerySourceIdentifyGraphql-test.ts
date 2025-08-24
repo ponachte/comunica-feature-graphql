@@ -1,9 +1,8 @@
 import { KeysInitQuery } from '@comunica/context-entries';
-import { ActionContext, Bus } from '@comunica/core';
+import { ActionContext, Bus, passTestVoid, failTest } from '@comunica/core';
 import { DataFactory } from 'rdf-data-factory';
 import { ActorQuerySourceIdentifyGraphql } from '../lib/ActorQuerySourceIdentifyGraphql';
 import 'jest-rdf';
-import '@comunica/utils-jest';
 
 const mediatorMergeBindingsContext: any = {
   mediate: () => ({}),
@@ -60,14 +59,14 @@ describe('ActorQuerySourceIdentifyGraphql', () => {
         await expect(actor.test({
           querySourceUnidentified: { type: 'graphql', value: 'http://example.com/graphql' },
           context: new ActionContext(),
-        })).resolves.toPassTestVoid();
+        })).resolves.toStrictEqual(passTestVoid());
       });
 
       it('should fail test with non-graphql type', async() => {
         await expect(actor.test({
           querySourceUnidentified: { type: 'rdfjs', value: 'source' },
           context: new ActionContext(),
-        })).resolves.toFailTest(`${actor.name} requires a single query source with graphql type to be present in the context.`);
+        })).resolves.toStrictEqual(failTest(`${actor.name} requires a single query source with graphql type to be present in the context.`));
       });
     });
 

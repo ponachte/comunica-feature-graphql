@@ -1,13 +1,12 @@
 import { KeysInitQuery, KeysQueryOperation, KeysRdfUpdateQuads } from '@comunica/context-entries';
-import { ActionContext, Bus } from '@comunica/core';
+import { ActionContext, Bus, passTestVoid } from '@comunica/core';
 import type { IQuerySourceWrapper } from '@comunica/types';
 import { getOperationSource } from '@comunica/utils-query-operation';
 import { DataFactory } from 'rdf-data-factory';
 import { Algebra, Factory } from 'sparqlalgebrajs';
 import {
   ActorOptimizeQueryOperationAssignSourcesExhaustive,
-} from '../lib/ActorOptimizeQueryOperationAssignSourcesExhaustiveMy';
-import '@comunica/utils-jest';
+} from '../lib/ActorOptimizeQueryOperationAssignSourcesExhaustive';
 
 const AF = new Factory();
 const DF = new DataFactory();
@@ -54,7 +53,7 @@ describe('ActorOptimizeQueryOperationAssignSourcesExhaustive', () => {
       await expect(actor.test({
         operation: AF.createNop(),
         context: new ActionContext({ [KeysInitQuery.dataFactory.name]: DF }),
-      })).resolves.toPassTestVoid();
+      })).resolves.toStrictEqual(passTestVoid());
     });
 
     describe('run', () => {

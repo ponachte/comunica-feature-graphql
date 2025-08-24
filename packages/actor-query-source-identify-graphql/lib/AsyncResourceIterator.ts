@@ -4,7 +4,7 @@ import { BufferedIterator } from 'asynciterator';
 
 export type Resource = Record<string, any>;
 
-function flattenResponse(obj: any, prefix = ''): Resource[] {
+export function flattenResponse(obj: any, prefix = ''): Resource[] {
   if (Array.isArray(obj)) {
     // Flatten each item in the array and combine results
     return obj.flatMap(item => flattenResponse(item, prefix));
@@ -39,7 +39,7 @@ function flattenResponse(obj: any, prefix = ''): Resource[] {
 
 export class AsyncResourceIterator extends BufferedIterator<Resource> {
   private readonly source: string;
-  private query: string;
+  public query: string;
   private readonly context: IActionContext;
   private readonly mediatorHttp: MediatorHttp;
 
@@ -61,11 +61,6 @@ export class AsyncResourceIterator extends BufferedIterator<Resource> {
       while (_count > 0) {
         // Fetch graphql query results
         const response = await this._query(this.query);
-
-        if (!response) {
-          this.close();
-          break;
-        }
 
         // Extract resources from results
         const resources: Resource[] = flattenResponse(response.data);
@@ -124,7 +119,7 @@ export class AsyncResourceIterator extends BufferedIterator<Resource> {
       try {
         errorBody = await response.text();
       } catch {
-        errorBody = '<no body>';
+        errorBody = '<failed to read body>';
       }
 
       throw new Error(`HTTP ${response.status} ${response.statusText}: ${errorBody}`);
@@ -238,7 +233,7 @@ export class AsyncResourceIterator extends BufferedIterator<Resource> {
         index++;
       }
 
-      return source;
+      throw new Error(`Unable to update query ${query} with cursor ${newCursor} at path ${path}`);
     }
 
     return insertCursorAtField(query, pathParts);
