@@ -1,6 +1,6 @@
 {
   "name": "@comunica/actor-optimize-query-operation-assign-sources-exhaustive-graphql",
-  "version": "4.1.3",
+  "version": "4.1.4",
   "private": false,
   "description": "A assign-sources-exhaustive optimize-query-operation actor for the SPARQL GraphQl engine",
   "lsd:module": true,
