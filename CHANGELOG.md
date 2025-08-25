@@ -1,6 +1,14 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+<a name="v4.2.2"></a>
+## [v4.2.2](https://github.com/ponachte/comunica-feature-graphql/compare/v4.2.1...v4.2.2) - 2025-08-25
+
+### TODO: categorize commits, choose titles from: Added, Changed, Deprecated, Removed, Fixed, Security.
+* [package bugfix](https://github.com/ponachte/comunica-feature-graphql/commit/d8fe320152275fbc31f2fa0c3ec523b75d961d48)
+* [update READMEs](https://github.com/ponachte/comunica-feature-graphql/commit/986ec5bfe34d9498a70ba783190b8123e7219f29)
+* [update READMEs](https://github.com/ponachte/comunica-feature-graphql/commit/1b00d82f637ad04346e7a48e23c7a8fad93b830d)
+
 <a name="v4.2.1"></a>
 ## [v4.2.1](https://github.com/ponachte/comunica-feature-graphql/compare/v4.2.0...v4.2.1) - 2025-08-25
 
