@@ -5,7 +5,7 @@
   "@graph": [
     {
       "import": [
-        "ccqsg:config/query-source-identify/actors/graphql.json"
+        "cgcqsg:config/query-source-identify/actors/graphql.json"
       ]
     }
   ]

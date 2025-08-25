@@ -3,6 +3,6 @@
     "https://linkedsoftwaredependencies.org/bundles/npm/@comunica-graphql/config-query-sparql-graphql/^4.0.0/components/context.jsonld"
   ],
   "import": [
-    "ccqsg:config/config-default.json"
+    "cgcqsg:config/config-default.json"
   ]
 }
