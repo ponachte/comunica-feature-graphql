@@ -58,6 +58,7 @@
     "prepare": "comunica-compile-config config/config-default.json > engine-default.js"
   },
   "dependencies": {
+    "@comunica-gaphql/config-query-sparql-graphql": "^4.2.1",
     "@comunica-graphql/actor-context-preprocess-convert-shortcuts-graphql": "^4.2.1",
     "@comunica-graphql/actor-optimize-query-operation-assign-sources-exhaustive-graphql": "^4.2.1",
     "@comunica-graphql/actor-query-source-identify-graphql": "^4.2.1",
@@ -289,7 +290,6 @@
     "@comunica/bus-http-invalidate": "^4.2.0",
     "@comunica/bus-query-operation": "^4.2.0",
     "@comunica/config-query-sparql": "~4.2.0",
-    "@comunica/config-query-sparql-graphql": "^4.1.4",
     "@comunica/core": "^4.2.0",
     "@comunica/logger-void": "^4.2.0",
     "@comunica/mediator-all": "^4.2.0",
