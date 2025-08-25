@@ -4,7 +4,7 @@
 
 A comunica Graphql Query Source Identify Actor.
 
-This module is part of the [Comunica framework](https://github.com/comunica/comunica),
+This module is part of the [Comunica SPARQL GraphQL engine](https://github.com/ponachte/comunica-feature-graphql),
 and should only be used by [developers that want to build their own query engine](https://comunica.dev/docs/modify/).
 
 [Click here if you just want to query with Comunica](https://comunica.dev/docs/query/).

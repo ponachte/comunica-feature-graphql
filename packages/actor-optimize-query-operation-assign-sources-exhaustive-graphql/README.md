@@ -9,7 +9,7 @@ It will similarly handle property paths.
 If only a single source is being queried over, it will attempt to assign the whole query operation to the source
 if the source supports such operations. Otherwise, it will fallback to the union-based approach.
 
-This module is part of the [Comunica SPARQL GraphQl engine](https://github.com/comunica/comunica),
+This module is part of the [Comunica SPARQL GraphQL engine](https://github.com/ponachte/comunica-feature-graphql),
 and should only be used by [developers that want to build their own query engine](https://comunica.dev/docs/modify/).
 
 [Click here if you just want to query with Comunica](https://comunica.dev/docs/query/).
