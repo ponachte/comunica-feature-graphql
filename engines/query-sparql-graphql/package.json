@@ -1,6 +1,6 @@
 {
   "name": "@comunica-graphql/query-sparql-graphql",
-  "version": "4.2.3",
+  "version": "4.2.4",
   "private": false,
   "description": "A Comunica engine to enable SPARQL queries over GraphQL endpoints",
   "lsd:module": true,
