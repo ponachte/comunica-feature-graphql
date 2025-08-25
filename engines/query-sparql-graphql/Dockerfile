@@ -1,7 +1,7 @@
 FROM node:22
 
 # Install location
-ENV dir /var/www/@comunica/query-sparql-graphql/
+ENV dir /var/www/@comunica-graphql/query-sparql-graphql/
 
 # Copy the engine files (generated from package.json!files)
 COPY config ${dir}/config/
@@ -11,7 +11,7 @@ COPY engine-default.js package.json ${dir}
 
 # Set the npm registry
 ARG NPM_REGISTRY=https://registry.npmjs.org/
-RUN npm config set @comunica:registry $NPM_REGISTRY
+RUN npm config set @comunica-graphql:registry $NPM_REGISTRY
 
 # Install the node module
 RUN cd ${dir} && npm install --only=production

@@ -1,6 +1,6 @@
 # Comunica Convert Shortcuts Context Preprocess Actor
 
-[![npm version](https://badge.fury.io/js/%40comunica%2Factor-context-preprocess-convert-shortcuts-graphql.svg)](https://www.npmjs.com/package/@comunica/actor-context-preprocess-convert-shortcuts-graphql)
+[![npm version](https://badge.fury.io/js/%40comunica%2Factor-context-preprocess-convert-shortcuts-graphql.svg)](https://www.npmjs.com/package/@comunica-graphql/actor-context-preprocess-convert-shortcuts-graphql)
 
 An [Context Preprocess](https://github.com/comunica/comunica/tree/master/packages/bus-context-preprocess) actor
 that expands shortcuts in the context to full context keys.
@@ -14,7 +14,7 @@ and should only be used by [developers that want to build their own query engine
 ## Install
 
 ```bash
-$ yarn add @comunica/actor-context-preprocess-convert-shortcuts-graphql
+$ yarn add @comunica-graphql/actor-context-preprocess-convert-shortcuts-graphql
 ```
 
 ## Configure

@@ -1,5 +1,5 @@
 {
-  "name": "@comunica/query-sparql-graphql",
+  "name": "@comunica-graphql/query-sparql-graphql",
   "version": "4.1.4",
   "private": false,
   "description": "A Comunica engine to enable SPARQL queries over GraphQL endpoints",
@@ -58,6 +58,9 @@
     "prepare": "comunica-compile-config config/config-default.json > engine-default.js"
   },
   "dependencies": {
+    "@comunica-graphql/actor-context-preprocess-convert-shortcuts-graphql": "^4.1.4",
+    "@comunica-graphql/actor-optimize-query-operation-assign-sources-exhaustive-graphql": "^4.1.4",
+    "@comunica-graphql/actor-query-source-identify-graphql": "^4.1.4",
     "@comunica/actor-bindings-aggregator-factory-average": "^4.2.0",
     "@comunica/actor-bindings-aggregator-factory-count": "^4.2.0",
     "@comunica/actor-bindings-aggregator-factory-group-concat": "^4.2.0",
@@ -66,7 +69,6 @@
     "@comunica/actor-bindings-aggregator-factory-sample": "^4.2.0",
     "@comunica/actor-bindings-aggregator-factory-sum": "^4.2.0",
     "@comunica/actor-bindings-aggregator-factory-wildcard-count": "^4.2.0",
-    "@comunica/actor-context-preprocess-convert-shortcuts-graphql": "^4.1.4",
     "@comunica/actor-context-preprocess-query-source-identify": "^4.2.0",
     "@comunica/actor-context-preprocess-query-source-skolemize": "^4.2.0",
     "@comunica/actor-context-preprocess-set-defaults": "^4.2.0",
@@ -167,7 +169,6 @@
     "@comunica/actor-http-retry": "^4.2.0",
     "@comunica/actor-http-wayback": "^4.2.0",
     "@comunica/actor-init-query": "^4.2.0",
-    "@comunica/actor-optimize-query-operation-assign-sources-exhaustive-graphql": "^4.1.4",
     "@comunica/actor-optimize-query-operation-bgp-to-join": "^4.2.0",
     "@comunica/actor-optimize-query-operation-construct-distinct": "^4.2.0",
     "@comunica/actor-optimize-query-operation-describe-to-constructs-subject": "^4.2.0",
@@ -229,7 +230,6 @@
     "@comunica/actor-query-result-serialize-stats": "^4.2.0",
     "@comunica/actor-query-result-serialize-table": "^4.2.0",
     "@comunica/actor-query-result-serialize-tree": "^4.2.0",
-    "@comunica/actor-query-source-identify-graphql": "^4.1.4",
     "@comunica/actor-query-source-identify-hypermedia": "^4.2.0",
     "@comunica/actor-query-source-identify-hypermedia-none": "^4.2.0",
     "@comunica/actor-query-source-identify-hypermedia-qpf": "^4.2.0",
@@ -303,5 +303,6 @@
   },
   "browser": {
     "./lib/index.js": "./lib/index-browser.js"
-  }
+  },
+  "gitHead": "ddeda7ad0f213ff018879bce5eb6a617a14c4fb1"
 }

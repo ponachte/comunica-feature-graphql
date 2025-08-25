@@ -1,5 +1,5 @@
 {
-  "name": "@comunica/actor-query-source-identify-graphql",
+  "name": "@comunica-graphql/actor-query-source-identify-graphql",
   "version": "4.1.4",
   "private": false,
   "description": "A graphql query-source-identify actor",
@@ -58,5 +58,6 @@
     "sparqlalgebrajs": "^4.3.8",
     "sparqljson-parse": "^3.0.0",
     "tree-to-sparqljson": "^1.0.2"
-  }
+  },
+  "gitHead": "ddeda7ad0f213ff018879bce5eb6a617a14c4fb1"
 }

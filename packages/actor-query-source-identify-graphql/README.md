@@ -1,6 +1,6 @@
 # Comunica Graphql Query Source Identify Actor
 
-[![npm version](https://badge.fury.io/js/%40comunica%2Factor-query-source-identify-graphql.svg)](https://www.npmjs.com/package/@comunica/actor-query-source-identify-graphql)
+[![npm version](https://badge.fury.io/js/%40comunica%2Factor-query-source-identify-graphql.svg)](https://www.npmjs.com/package/@comunica-graphql/actor-query-source-identify-graphql)
 
 A comunica Graphql Query Source Identify Actor.
 
@@ -12,7 +12,7 @@ and should only be used by [developers that want to build their own query engine
 ## Install
 
 ```bash
-$ yarn add @comunica/actor-query-source-identify-graphql
+$ yarn add @comunica-graphql/actor-query-source-identify-graphql
 ```
 
 ## Configure
@@ -22,7 +22,7 @@ After installing, this package can be added to your engine's configuration as fo
 {
   "@context": [
     ...
-    "https://linkedsoftwaredependencies.org/bundles/npm/@comunica/actor-query-source-identify-graphql/^1.0.0/components/context.jsonld"
+    "https://linkedsoftwaredependencies.org/bundles/npm/@comunica-graphql/actor-query-source-identify-graphql/^1.0.0/components/context.jsonld"
   ],
   "actors": [
     ...

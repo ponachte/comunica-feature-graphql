@@ -1,5 +1,5 @@
 {
-  "name": "@comunica/actor-optimize-query-operation-assign-sources-exhaustive-graphql",
+  "name": "@comunica-graphql/actor-optimize-query-operation-assign-sources-exhaustive-graphql",
   "version": "4.1.4",
   "private": false,
   "description": "A assign-sources-exhaustive optimize-query-operation actor for the SPARQL GraphQl engine",
@@ -49,5 +49,6 @@
     "@comunica/types": "^4.2.0",
     "@comunica/utils-query-operation": "^4.2.0",
     "sparqlalgebrajs": "^4.3.8"
-  }
+  },
+  "gitHead": "ddeda7ad0f213ff018879bce5eb6a617a14c4fb1"
 }

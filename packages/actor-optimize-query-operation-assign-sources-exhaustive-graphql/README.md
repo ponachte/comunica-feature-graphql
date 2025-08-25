@@ -1,6 +1,6 @@
 # Comunica Assign Sources Exhaustive Optimize Query Operation Actor
 
-[![npm version](https://badge.fury.io/js/%40comunica%2Factor-optimize-query-operation-assign-sources-exhaustive-graphql.svg)](https://www.npmjs.com/package/@comunica/actor-optimize-query-operation-assign-sources-exhaustive-graphql)
+[![npm version](https://badge.fury.io/js/%40comunica%2Factor-optimize-query-operation-assign-sources-exhaustive-graphql.svg)](https://www.npmjs.com/package/@comunica-graphql/actor-optimize-query-operation-assign-sources-exhaustive-graphql)
 
 An [Optimize Query Operation](https://github.com/comunica/comunica/tree/master/packages/bus-optimize-query-operation) actor
 that converts every quad pattern in the query to a union of quad patterns per source.
@@ -17,7 +17,7 @@ and should only be used by [developers that want to build their own query engine
 ## Install
 
 ```bash
-$ yarn add @comunica/actor-optimize-query-operation-assign-sources-exhaustive-graphql
+$ yarn add @comunica-graphql/actor-optimize-query-operation-assign-sources-exhaustive-graphql
 ```
 
 ## Configure
@@ -27,7 +27,7 @@ After installing, this package can be added to your engine's configuration as fo
 {
   "@context": [
     ...
-    "https://linkedsoftwaredependencies.org/bundles/npm/@comunica/actor-optimize-query-operation-assign-sources-exhaustive-graphql/^1.0.0/components/context.jsonld"
+    "https://linkedsoftwaredependencies.org/bundles/npm/@comunica-graphql/actor-optimize-query-operation-assign-sources-exhaustive-graphql/^1.0.0/components/context.jsonld"
   ],
   "actors": [
     ...

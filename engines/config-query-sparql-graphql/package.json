@@ -1,5 +1,5 @@
 {
-  "name": "@comunica/config-query-sparql-graphql",
+  "name": "@comunica-graphql/config-query-sparql-graphql",
   "version": "4.1.4",
   "private": false,
   "description": "default configuration files for Comunica SPARQL GraphQL engine",
@@ -47,5 +47,6 @@
   },
   "dependencies": {
     "@comunica/config-query-sparql": "~4.2.0"
-  }
+  },
+  "gitHead": "ddeda7ad0f213ff018879bce5eb6a617a14c4fb1"
 }

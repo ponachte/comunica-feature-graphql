@@ -1,6 +1,6 @@
 # Comunica SPARQL GraphQL Config
 
-[![npm version](https://badge.fury.io/js/%40comunica%2Fconfig-query-sparql-graphql.svg)](https://www.npmjs.com/package/@comunica/config-query-sparql-graphql)
+[![npm version](https://badge.fury.io/js/%40comunica%2Fconfig-query-sparql-graphql.svg)](https://www.npmjs.com/package/@comunica-graphql/config-query-sparql-graphql)
 
 This package should be used if you want to create your own Comunica query configuration, and build upon the default SPARQL GraphQL configurations.
 
@@ -9,7 +9,7 @@ This package should be used if you want to create your own Comunica query config
 ## Installation
 
 ```bash
-$ yarn add @comunica/config-query-sparql-graphql
+$ yarn add @comunica-graphql/config-query-sparql-graphql
 ```
 
 ## Usage
