@@ -1,6 +1,6 @@
 # Comunica Graphql Query Source Identify Actor
 
-[![npm version](https://badge.fury.io/js/%40comunica%2Factor-query-source-identify-graphql.svg)](https://www.npmjs.com/package/@comunica-graphql/actor-query-source-identify-graphql)
+[![npm version](https://badge.fury.io/js/%40comunica-graphql%2Factor-query-source-identify-graphql.svg)](https://www.npmjs.com/package/@comunica-graphql/actor-query-source-identify-graphql)
 
 A comunica Graphql Query Source Identify Actor.
 
