@@ -1,6 +1,6 @@
 {
   "name": "@comunica-graphql/actor-context-preprocess-convert-shortcuts-graphql",
-  "version": "4.2.0",
+  "version": "4.2.1",
   "private": false,
   "description": "A convert-shortcuts context-preprocess actor for the SPARQL GraphQl engine",
   "lsd:module": true,
