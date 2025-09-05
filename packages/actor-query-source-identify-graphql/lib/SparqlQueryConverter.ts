@@ -162,7 +162,7 @@ class Field {
       }
     } else if (node.term.termType === 'Literal') {
       // Leaf node with a literal
-      query += ` @filter(if: "${this.field.name}==${node.term.value}") `;
+      query += ` @filter(if: "${this.field.name}==${formatLiteral(node.term)}") `;
     } else if (node.term.termType === 'NamedNode') {
       // Leaf node with a NamedNode
       query += `(id: "${node.term.value}") { id } `;
@@ -206,6 +206,27 @@ class Field {
 
   public subField(pred: string): Field {
     return new Field(this.fieldType.getFields()[pred]);
+  }
+}
+
+function formatLiteral(term: RDF.Literal): string {
+  const dt = term.datatype.value;
+
+  // Common XSD numeric types
+  const numericTypes = [
+    'http://www.w3.org/2001/XMLSchema#integer',
+    'http://www.w3.org/2001/XMLSchema#decimal',
+    'http://www.w3.org/2001/XMLSchema#double',
+    'http://www.w3.org/2001/XMLSchema#float'
+  ];
+
+  // Booleans
+  const booleanType = 'http://www.w3.org/2001/XMLSchema#boolean';
+
+  if (numericTypes.includes(dt) || booleanType.includes(dt)) {
+    return term.value;
+  } else {
+    return `'${term.value}'`;
   }
 }
 

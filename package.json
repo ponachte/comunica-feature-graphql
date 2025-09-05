@@ -6,6 +6,10 @@
     "packages/*",
     "performance/*"
   ],
+  "private": true,
+  "license": "MIT",
+  "author": "Pol Nachtergaele",
+  "version": "4.2.1",
   "scripts": {
     "test-changed": "lerna run test --since HEAD",
     "build-changed": "lerna run build --since HEAD",
