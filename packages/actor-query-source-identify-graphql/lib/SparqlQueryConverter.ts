@@ -162,7 +162,7 @@ class Field {
       }
     } else if (node.term.termType === 'Literal') {
       // Leaf node with a literal
-      query += ` @filter(if: "${this.field.name}==${formatLiteral(node.term)}") `;
+      query += ` @filter(if: "${this.field.name}==${valueFromLiteral(node.term)}") `;
     } else if (node.term.termType === 'NamedNode') {
       // Leaf node with a NamedNode
       query += `(id: "${node.term.value}") { id } `;
@@ -209,7 +209,7 @@ class Field {
   }
 }
 
-function formatLiteral(term: RDF.Literal): string {
+function valueFromLiteral(term: RDF.Literal): string {
   const dt = term.datatype.value;
 
   // Common XSD numeric types

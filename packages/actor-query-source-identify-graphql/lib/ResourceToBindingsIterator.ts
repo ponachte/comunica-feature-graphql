@@ -30,19 +30,19 @@ export class ResourceToBindingsIterator extends TransformIterator<Resource, RDF.
     done: () => void,
     push: (binding: RDF.Bindings) => void,
   ): void {
-    const binding: Record<string, RDF.Term> = {};
+    const bindings: Record<string, RDF.Term> = {};
     for (const variable of this.variables) {
       // WARNING: value term type is assumed
       const varName = variable.value;
       const value = resource[this.varMap[varName]];
       if (/^https?:\/\/.+/u.test(value)) {
-        binding[varName] = this.dataFactory.namedNode(value);
+        bindings[varName] = this.dataFactory.namedNode(value);
       } else {
-        binding[varName] = this.dataFactory.literal(value);
+        bindings[varName] = literalFromValue(value, this.dataFactory);
       }
     }
 
-    push(this.convertToBindings(binding));
+    push(this.convertToBindings(bindings));
 
     done();
   }
@@ -52,4 +52,43 @@ export class ResourceToBindingsIterator extends TransformIterator<Resource, RDF.
       Object.entries(raw).map(([ key, term ]) => [ this.dataFactory.variable(key), term ]),
     );
   }
+}
+
+function literalFromValue(value: any, dataFactory: ComunicaDataFactory) {
+  const XSD = "http://www.w3.org/2001/XMLSchema#";
+
+  if (typeof value === "number") {
+    // Distinguish integers from decimals
+    if (Number.isInteger(value)) {
+      return dataFactory.literal(
+        value.toString(),
+        dataFactory.namedNode(XSD + "integer")
+      );
+    } else {
+      return dataFactory.literal(
+        value.toString(),
+        dataFactory.namedNode(XSD + "decimal")
+      );
+    }
+  }
+
+  if (typeof value === "boolean") {
+    return dataFactory.literal(
+      value ? "true" : "false",
+      dataFactory.namedNode(XSD + "boolean")
+    );
+  }
+
+  if (value instanceof Date) {
+    return dataFactory.literal(
+      value.toISOString(),
+      dataFactory.namedNode(XSD + "dateTime")
+    );
+  }
+
+  // Default: treat as string
+  return dataFactory.literal(
+    value.toString(),
+    dataFactory.namedNode(XSD + "string")
+  );
 }
