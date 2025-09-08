@@ -54,41 +54,40 @@ export class ResourceToBindingsIterator extends TransformIterator<Resource, RDF.
   }
 }
 
-function literalFromValue(value: any, dataFactory: ComunicaDataFactory) {
-  const XSD = "http://www.w3.org/2001/XMLSchema#";
+function literalFromValue(value: any, dataFactory: ComunicaDataFactory): RDF.Literal {
+  const XSD = 'http://www.w3.org/2001/XMLSchema#';
 
-  if (typeof value === "number") {
+  if (typeof value === 'number') {
     // Distinguish integers from decimals
     if (Number.isInteger(value)) {
       return dataFactory.literal(
         value.toString(),
-        dataFactory.namedNode(XSD + "integer")
-      );
-    } else {
-      return dataFactory.literal(
-        value.toString(),
-        dataFactory.namedNode(XSD + "decimal")
+        dataFactory.namedNode(`${XSD}integer`),
       );
     }
+    return dataFactory.literal(
+      value.toString(),
+      dataFactory.namedNode(`${XSD}decimal`),
+    );
   }
 
-  if (typeof value === "boolean") {
+  if (typeof value === 'boolean') {
     return dataFactory.literal(
-      value ? "true" : "false",
-      dataFactory.namedNode(XSD + "boolean")
+      value ? 'true' : 'false',
+      dataFactory.namedNode(`${XSD}boolean`),
     );
   }
 
   if (value instanceof Date) {
     return dataFactory.literal(
       value.toISOString(),
-      dataFactory.namedNode(XSD + "dateTime")
+      dataFactory.namedNode(`${XSD}dateTime`),
     );
   }
 
   // Default: treat as string
   return dataFactory.literal(
     value.toString(),
-    dataFactory.namedNode(XSD + "string")
+    dataFactory.namedNode(`${XSD}string`),
   );
 }

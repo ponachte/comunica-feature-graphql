@@ -1,15 +1,15 @@
 {
+  "version": "4.2.1",
+  "private": true,
   "packageManager": "yarn@1.22.22",
+  "author": "Pol Nachtergaele",
+  "license": "MIT",
   "repository": "https://github.com/ponachte/comunica-feature-graphql",
   "workspaces": [
     "engines/*",
     "packages/*",
     "performance/*"
   ],
-  "private": true,
-  "license": "MIT",
-  "author": "Pol Nachtergaele",
-  "version": "4.2.1",
   "scripts": {
     "test-changed": "lerna run test --since HEAD",
     "build-changed": "lerna run build --since HEAD",

@@ -217,7 +217,7 @@ function valueFromLiteral(term: RDF.Literal): string {
     'http://www.w3.org/2001/XMLSchema#integer',
     'http://www.w3.org/2001/XMLSchema#decimal',
     'http://www.w3.org/2001/XMLSchema#double',
-    'http://www.w3.org/2001/XMLSchema#float'
+    'http://www.w3.org/2001/XMLSchema#float',
   ];
 
   // Booleans
@@ -225,9 +225,8 @@ function valueFromLiteral(term: RDF.Literal): string {
 
   if (numericTypes.includes(dt) || booleanType.includes(dt)) {
     return term.value;
-  } else {
-    return `'${term.value}'`;
   }
+  return `'${term.value}'`;
 }
 
 function filterFields(fields: Field[], node: TreeNode): Field[] {
