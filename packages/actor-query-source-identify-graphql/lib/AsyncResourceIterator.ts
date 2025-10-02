@@ -1,8 +1,9 @@
 import type { MediatorHttp } from '@comunica/bus-http';
 import type { IActionContext } from '@comunica/types';
 import { BufferedIterator } from 'asynciterator';
+import type { RawRDF } from './SparqlQueryConverter';
 
-export type Resource = Record<string, any>;
+export type Resource = Record<string, string | RawRDF>;
 
 export function flattenResponse(obj: any, prefix = ''): Resource[] {
   if (Array.isArray(obj)) {
@@ -19,7 +20,15 @@ export function flattenResponse(obj: any, prefix = ''): Resource[] {
 
   for (const [ key, value ] of Object.entries(obj)) {
     const fullKey = prefix ? `${prefix}_${key}` : key;
-    const flattened = flattenResponse(value, fullKey);
+
+    let flattened: Resource[];
+    if (key === '_rawRDF' && typeof value === 'object' && value !== null) {
+      // Special case: keep _rawRDF intact
+      flattened = [{ [fullKey]: <RawRDF> value }];
+    } else {
+      // Recurse normally
+      flattened = flattenResponse(value, fullKey);
+    }
 
     // Combine each flattened result with the existing entries
     const combined: Resource[] = [];

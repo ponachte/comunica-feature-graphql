@@ -16,6 +16,7 @@ import type { Operation, Ask, Update } from 'sparqlalgebrajs/lib/algebra';
 import type { Resource } from './AsyncResourceIterator';
 import { AsyncResourceIterator } from './AsyncResourceIterator';
 import { ResourceToBindingsIterator } from './ResourceToBindingsIterator';
+import type { RawRDF } from './SparqlQueryConverter';
 import { SparqlQueryConverter } from './SparqlQueryConverter';
 
 export class QuerySourceGraphql implements IQuerySource {
@@ -35,7 +36,7 @@ export class QuerySourceGraphql implements IQuerySource {
   private readonly queryConversion: (
     op: Operation,
     ctx: IActionContext,
-  ) => [AsyncIterator<Resource>, Record<string, string>];
+  ) => [AsyncIterator<Resource>, Record<string, string>, Record<string, RawRDF>];
 
   public constructor(
     source: string,
@@ -112,13 +113,14 @@ export class QuerySourceGraphql implements IQuerySource {
     const variables = Util.inScopeVariables(operation);
 
     // Call pre-selected conversion function
-    const [ resourceIterator, varMap ] = this.queryConversion(operation, context);
+    const [ resourceIterator, varMap, filterMap ] = this.queryConversion(operation, context);
 
     const bindings: BindingsStream = new TransformIterator(async() => {
       const bindingsIterator = new ResourceToBindingsIterator(
         resourceIterator,
         variables,
         varMap,
+        filterMap,
         this.dataFactory,
         this.BindingsFactory,
       );
@@ -142,7 +144,7 @@ export class QuerySourceGraphql implements IQuerySource {
   private schemaQueryConversion(
     operation: Algebra.Operation,
     context: IActionContext,
-  ): [AsyncIterator<Resource>, Record<string, string>] {
+  ): [AsyncIterator<Resource>, Record<string, string>, Record<string, RawRDF>] {
     function extractPatterns(op: Algebra.Operation): Algebra.Pattern[] {
       switch (op.type) {
         case Algebra.types.PROJECT:
@@ -165,21 +167,21 @@ export class QuerySourceGraphql implements IQuerySource {
 
     const patterns = extractPatterns(operation);
 
-    for (const [ query, varMap ] of this.queryConverter!.convertOperation(patterns)) {
+    for (const [ query, varMap, filterMap ] of this.queryConverter!.convertOperation(patterns)) {
       try {
-        return [ this.querySource(query, context), varMap ];
+        return [ this.querySource(query, context), varMap, filterMap ];
       } catch {
         continue;
       }
     }
 
-    return [ new EmptyIterator(), {}];
+    return [ new EmptyIterator(), {}, {}];
   }
 
   private schemalessQueryConversion(
     operation: Algebra.Operation,
     context: IActionContext,
-  ): [AsyncIterator<Resource>, Record<string, string>] {
+  ): [AsyncIterator<Resource>, Record<string, string>, Record<string, RawRDF>] {
     if (operation.type !== 'pattern') {
       throw new Error(`Attempted to give non-pattern operation ${operation.type} to QuerySourceGraphql`);
     }
@@ -206,7 +208,7 @@ export class QuerySourceGraphql implements IQuerySource {
 
     if (object.termType === 'NamedNode') {
       query += `_object(predicate: "${predicate.value}", id: "${object.value}") { _rawRDF } }`;
-      return [ this.querySource(query, context), varMap ];
+      return [ this.querySource(query, context), varMap, {}];
     }
     if (object.termType === 'Literal' || object.termType === 'Variable') {
       query += `_object(predicate: "${predicate.value}") { _rawRDF } }`;
@@ -216,6 +218,7 @@ export class QuerySourceGraphql implements IQuerySource {
         return [
           resources.filter(r => r['Resource__object__rawRDF_@value'] === object.value),
           varMap,
+          {},
         ];
       }
       // Change the rawRDF variable
@@ -231,10 +234,11 @@ export class QuerySourceGraphql implements IQuerySource {
           };
         }),
         varMap,
+        {},
       ];
     }
 
-    return [ new EmptyIterator(), varMap ];
+    return [ new EmptyIterator(), varMap, {}];
   }
 
   private querySource(

@@ -4,10 +4,12 @@ import type * as RDF from '@rdfjs/types';
 import type { AsyncIterator } from 'asynciterator';
 import { TransformIterator } from 'asynciterator';
 import type { Resource } from './AsyncResourceIterator';
+import type { RawRDF } from './SparqlQueryConverter';
 
 export class ResourceToBindingsIterator extends TransformIterator<Resource, RDF.Bindings> {
   private readonly variables: RDF.Variable[];
   private readonly varMap: Record<string, string>;
+  private readonly filterMap: Record<string, RawRDF>;
   private readonly dataFactory: ComunicaDataFactory;
   private readonly bindingsFactory: BindingsFactory;
 
@@ -15,12 +17,14 @@ export class ResourceToBindingsIterator extends TransformIterator<Resource, RDF.
     source: AsyncIterator<Resource>,
     variables: RDF.Variable[],
     varMap: Record<string, string>,
+    filterMap: Record<string, RawRDF>,
     dataFactory: ComunicaDataFactory,
     bindingsFactory: BindingsFactory,
   ) {
     super(source, { autoStart: false });
     this.variables = variables;
     this.varMap = varMap;
+    this.filterMap = filterMap;
     this.dataFactory = dataFactory;
     this.bindingsFactory = bindingsFactory;
   }
@@ -31,19 +35,53 @@ export class ResourceToBindingsIterator extends TransformIterator<Resource, RDF.
     push: (binding: RDF.Bindings) => void,
   ): void {
     const bindings: Record<string, RDF.Term> = {};
+
+    // --- Filter resources based on filterMap ---
+    for (const filterId of Object.keys(this.filterMap)) {
+      const filterValue: RawRDF = this.filterMap[filterId];
+
+      if (!resource[filterId]) {
+        continue;
+      }
+      const resourceValue = <RawRDF> resource[filterId];
+
+      if (filterValue['@id']) {
+        if (resourceValue['@id'] !== filterValue['@id']) {
+          // Doesn't match, skip resource
+          done();
+          return;
+        }
+      } else if (filterValue['@type'] && filterValue['@value'] && (
+        resourceValue['@value'] !== filterValue['@value'] ||
+          resourceValue['@type'] !== filterValue['@type']
+      )) {
+        // Doesn't match, skip resource
+        done();
+        return;
+      }
+    }
+
+    // --- Convert resource values to RDF terms ---
     for (const variable of this.variables) {
-      // WARNING: value term type is assumed
       const varName = variable.value;
       const value = resource[this.varMap[varName]];
-      if (/^https?:\/\/.+/u.test(value)) {
-        bindings[varName] = this.dataFactory.namedNode(value);
+
+      if (typeof value === 'object' && value !== null && !Array.isArray(value)) {
+        if (value['@id']) {
+          bindings[varName] = this.dataFactory.namedNode(value['@id']);
+        } else if (value['@value'] && value['@type']) {
+          bindings[varName] = this.dataFactory.literal(value['@value'], value['@type']);
+        } else {
+          throw new Error(
+            `Invalid RawRDF format for variable "${varName}": ${JSON.stringify(value)}`,
+          );
+        }
       } else {
         bindings[varName] = literalFromValue(value, this.dataFactory);
       }
     }
 
     push(this.convertToBindings(bindings));
-
     done();
   }
 

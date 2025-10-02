@@ -27,6 +27,11 @@ export class SparqlQueryConverter {
     this.context = context;
 
     // Get entryfields
+    schema_source = `
+    scalar BoxedLiteral
+    scalar RDFNode
+    ${schema_source}
+    `;
     const schema = buildSchema(schema_source);
     const queryType = schema.getQueryType() ?? (() => {
       throw new Error('Schema does not define a query type.');
@@ -34,7 +39,7 @@ export class SparqlQueryConverter {
     this.entryFields = Object.values(queryType.getFields()).map(field => new Field(field));
   }
 
-  public convertOperation(patterns: Algebra.Pattern[]): [string, Record<string, string>][] {
+  public convertOperation(patterns: Algebra.Pattern[]): [string, Record<string, string>, Record<string, RawRDF>][] {
     const trees = this.PatternsToTrees(patterns);
 
     if (trees.roots.length > 1) {
@@ -117,12 +122,17 @@ class Field {
     return this.field.name;
   }
 
-  public leaf(): boolean {
+  public scalarLeaf(): boolean {
     return isScalarType(this.fieldType);
   }
 
-  public toQuery(node: TreeNode): [string, Record<string, string>] {
+  public RDFLeaf(): boolean {
+    return this.fieldType.name === 'RDFNode' || this.fieldType.name === 'BoxedLiteral';
+  }
+
+  public toQuery(node: TreeNode): [string, Record<string, string>, Record<string, RawRDF>] {
     const varMap: Record<string, string> = {};
+    const filterMap: Record<string, RawRDF> = {};
     let query = this.field.name;
 
     if (Object.keys(node.children).length > 0) {
@@ -154,21 +164,39 @@ class Field {
       query += '} ';
     } else if (node.term.termType === 'Variable') {
       // Leaf node with a variable
-      if (this.leaf()) {
-        varMap[node.term.value] = `${this.field.name}`;
+      if (this.RDFLeaf()) {
+        query += ' { _rawRDF } ';
+        varMap[node.term.value] = `${this.field.name}__rawRDF`;
+      } else if (this.scalarLeaf()) {
+        varMap[node.term.value] = this.field.name;
       } else {
         query += ' { id } ';
         varMap[node.term.value] = `${this.field.name}_id`;
       }
     } else if (node.term.termType === 'Literal') {
       // Leaf node with a literal
-      query += ` @filter(if: "${this.field.name}==${valueFromLiteral(node.term)}") `;
+      if (this.RDFLeaf()) {
+        query += ' { _rawRDF } ';
+        filterMap[`${this.field.name}__rawRDF`] = {
+          '@value': node.term.value,
+          '@type': node.term.datatype.value,
+        };
+      } else {
+        query += ` @filter(if: "${this.field.name}==${valueFromLiteral(node.term)}") `;
+      }
     } else if (node.term.termType === 'NamedNode') {
       // Leaf node with a NamedNode
-      query += `(id: "${node.term.value}") { id } `;
+      if (this.RDFLeaf()) {
+        query += ' { _rawRDF } ';
+        filterMap[`${this.field.name}__rawRDF`] = {
+          '@id': node.term.value,
+        };
+      } else {
+        query += `(id: "${node.term.value}") { id } `;
+      }
     }
 
-    return [ query.replaceAll(/\s+/ug, ' ').trim(), varMap ];
+    return [ query.replaceAll(/\s+/ug, ' ').trim(), varMap, filterMap ];
   }
 
   public withId(subj: RDF.Term): boolean {
@@ -186,7 +214,7 @@ class Field {
 
     // Literals are only found on leafs
     if (node.term.termType === 'Literal') {
-      return field.leaf();
+      return field.scalarLeaf();
     }
 
     // Check if this field accepts the node term
@@ -253,4 +281,10 @@ interface TreeNode {
 interface Trees {
   roots: TreeNode[];
   nodes: Record<string, TreeNode>;
+}
+
+export interface RawRDF {
+  '@id'?: string;
+  '@value'?: string;
+  '@type'?: string;
 }
