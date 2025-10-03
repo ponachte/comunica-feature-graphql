@@ -71,7 +71,8 @@ export class ResourceToBindingsIterator extends TransformIterator<Resource, RDF.
         if (value['@id']) {
           bindings[varName] = this.dataFactory.namedNode(value['@id']);
         } else if (value['@value'] && value['@type']) {
-          bindings[varName] = this.dataFactory.literal(value['@value'], value['@type']);
+          const valueType = this.dataFactory.namedNode(value['@type']);
+          bindings[varName] = this.dataFactory.literal(value['@value'], valueType);
         } else {
           throw new Error(
             `Invalid RawRDF format for variable "${varName}": ${JSON.stringify(value)}`,
