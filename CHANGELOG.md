@@ -1,6 +1,13 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+<a name="v4.2.7"></a>
+## [v4.2.7](https://github.com/ponachte/comunica-feature-graphql/compare/v4.2.6...v4.2.7) - 2025-10-03
+
+### TODO: categorize commits, choose titles from: Added, Changed, Deprecated, Removed, Fixed, Security.
+* [lint](https://github.com/ponachte/comunica-feature-graphql/commit/ca7c4e0724b8047bc57810a0de7620b8f2de72cc)
+* [support RDFNode and BoxedLiteral in graphql schema](https://github.com/ponachte/comunica-feature-graphql/commit/e04c173f41bb51f65b12a427144056c8a00ac857)
+
 <a name="v4.2.6"></a>
 ## [v4.2.6](https://github.com/ponachte/comunica-feature-graphql/compare/v4.2.5...v4.2.6) - 2025-09-08
 
