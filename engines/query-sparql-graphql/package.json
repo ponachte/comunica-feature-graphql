@@ -1,6 +1,6 @@
 {
   "name": "@comunica-graphql/query-sparql-graphql",
-  "version": "4.2.7",
+  "version": "4.2.8",
   "private": false,
   "description": "A Comunica engine to enable SPARQL queries over GraphQL endpoints",
   "lsd:module": true,
@@ -60,7 +60,7 @@
   "dependencies": {
     "@comunica-graphql/actor-context-preprocess-convert-shortcuts-graphql": "^4.2.0",
     "@comunica-graphql/actor-optimize-query-operation-assign-sources-exhaustive-graphql": "^4.2.0",
-    "@comunica-graphql/actor-query-source-identify-graphql": "^4.2.7",
+    "@comunica-graphql/actor-query-source-identify-graphql": "^4.2.8",
     "@comunica-graphql/config-query-sparql-graphql": "^4.2.0",
     "@comunica/actor-bindings-aggregator-factory-average": "^4.2.0",
     "@comunica/actor-bindings-aggregator-factory-count": "^4.2.0",
