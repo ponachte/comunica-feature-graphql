@@ -41,6 +41,7 @@ export class ResourceToBindingsIterator extends TransformIterator<Resource, RDF.
       const filterValue: RawRDF = this.filterMap[filterId];
 
       if (!resource[filterId]) {
+        // Resource does not have filterId so does not have to be filtered
         continue;
       }
       const resourceValue = <RawRDF> resource[filterId];
@@ -77,7 +78,7 @@ export class ResourceToBindingsIterator extends TransformIterator<Resource, RDF.
           );
         }
       } else {
-        bindings[varName] = literalFromValue(value, this.dataFactory);
+        bindings[varName] = termFromValue(value, this.dataFactory);
       }
     }
 
@@ -92,8 +93,24 @@ export class ResourceToBindingsIterator extends TransformIterator<Resource, RDF.
   }
 }
 
-function literalFromValue(value: any, dataFactory: ComunicaDataFactory): RDF.Literal {
+function isUri(value: string): boolean {
+  try {
+    const url = new URL(value);
+    return url.protocol === 'http:' || url.protocol === 'https:';
+  } catch {
+    return false;
+  }
+}
+
+function termFromValue(value: any, dataFactory: ComunicaDataFactory): RDF.Term {
   const XSD = 'http://www.w3.org/2001/XMLSchema#';
+
+  if (typeof value === 'string') {
+    if (isUri(value)) {
+      return dataFactory.namedNode(value);
+    }
+    return dataFactory.literal(value, `${XSD}string`);
+  }
 
   if (typeof value === 'number') {
     // Distinguish integers from decimals
