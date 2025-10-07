@@ -1,5 +1,7 @@
 import type { MediatorHttp } from '@comunica/bus-http';
 import type {
+  MetadataBindings,
+
   BindingsStream,
   ComunicaDataFactory,
   FragmentSelectorShape,
@@ -127,17 +129,7 @@ export class QuerySourceGraphql implements IQuerySource {
 
       return bindingsIterator;
     });
-
-    bindings.setProperty('metadata', {
-      state: new MetadataValidationState(),
-      cardinality: {
-        type: 'estimate',
-        value: Number.POSITIVE_INFINITY,
-        dataset: this.source,
-      },
-      variables: variables.map(variable => ({ variable, canBeUndef: false })),
-    });
-
+    this.setMetadata(resourceIterator, bindings, variables).catch(error => bindings.destroy(error));
     return bindings;
   }
 
@@ -251,6 +243,42 @@ export class QuerySourceGraphql implements IQuerySource {
       context,
       this.mediatorHttp,
     );
+  }
+
+  private async setMetadata(
+    source: AsyncIterator<Resource>,
+    target: BindingsStream,
+    variables: RDF.Variable[],
+  ): Promise<void> {
+    target.setProperty('metadata', await new Promise((resolve, reject) => {
+      try {
+        const sourceMetadata = source.getProperty<Promise<MetadataBindings>>('metadata');
+
+        if (!sourceMetadata || typeof sourceMetadata.then !== 'function') {
+          // If the source has no metadata, resolve with a default
+          return resolve(<MetadataBindings>{
+            state: new MetadataValidationState(),
+            cardinality: { type: 'estimate', value: Number.POSITIVE_INFINITY },
+            variables: variables.map(v => ({ variable: v, canBeUndef: false })),
+          });
+        }
+
+        sourceMetadata
+          .then((metadata) => {
+            const newMetadata: MetadataBindings = {
+              ...metadata,
+              variables: variables.map(variable => ({
+                variable,
+                canBeUndef: false,
+              })),
+            };
+            resolve(newMetadata);
+          })
+          .catch(reject);
+      } catch (err) {
+        reject(err);
+      }
+    }));
   }
 
   public queryQuads(

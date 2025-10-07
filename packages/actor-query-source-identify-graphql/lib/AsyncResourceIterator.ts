@@ -1,5 +1,6 @@
 import type { MediatorHttp } from '@comunica/bus-http';
-import type { IActionContext } from '@comunica/types';
+import type { IActionContext, MetadataBindings } from '@comunica/types';
+import { MetadataValidationState } from '@comunica/utils-metadata';
 import { BufferedIterator } from 'asynciterator';
 import type { RawRDF } from './SparqlQueryConverter';
 
@@ -51,6 +52,7 @@ export class AsyncResourceIterator extends BufferedIterator<Resource> {
   public query: string;
   private readonly context: IActionContext;
   private readonly mediatorHttp: MediatorHttp;
+  private countMetadata: Promise<MetadataBindings> | undefined;
 
   public constructor(
     source: string,
@@ -137,8 +139,8 @@ export class AsyncResourceIterator extends BufferedIterator<Resource> {
     return await response.json();
   }
 
-  private _updateCursorInQuery(query: string, path: string, newCursor: string): string {
-    const pathParts = path.replace(/^\/+/u, '').split('/');
+  private _updateCursorInQuery(query: string, path?: string, newCursor = ''): string {
+    const pathParts = path ? path.replace(/^\/+/u, '').split('/') : [];
 
     function insertCursorAtField(source: string, parts: string[], depth = 0): string {
       const field = parts[0];
@@ -155,23 +157,81 @@ export class AsyncResourceIterator extends BufferedIterator<Resource> {
           continue;
         }
 
-        if (!inString && new RegExp(`^\\b${field}\\b`, 'u').test(source.slice(index))) {
+        // Root-level query injection
+        if (parts.length === 0 && depth === 0) {
+          // Find the first field in the query body
+          const fieldMatch = /\b([_A-Za-z][_0-9A-Za-z]*)\b\s*(\(|\{)/u.exec(source);
+          if (!fieldMatch) {
+            throw new Error('Unable to locate root field in query.');
+          }
+
+          const fieldName = fieldMatch[1];
+          const matchStart = fieldMatch.index;
+          const matchEnd = matchStart + fieldName.length;
+          let i = matchEnd;
+
+          // Skip whitespace
+          while (/\s/u.test(source[i])) {
+            i++;
+          }
+
+          // Check for existing arguments
+          if (source[i] === '(') {
+            let parenCount = 1;
+            const argsStart = i;
+            i++;
+
+            while (i < source.length && parenCount > 0) {
+              if (source[i] === '(') {
+                parenCount++;
+              } else if (source[i] === ')') {
+                parenCount--;
+              }
+              i++;
+            }
+
+            const argsEnd = i;
+            const argsStr = source
+              .slice(argsStart + 1, argsEnd - 1)
+              .split(',')
+              .map(arg => arg.trim())
+              .filter(arg => arg && !arg.startsWith('cursor:'));
+
+            argsStr.push(`cursor: "${newCursor}"`);
+            const updatedField = `${fieldName}(${argsStr.join(', ')})`;
+
+            return (
+              source.slice(0, matchStart) +
+              updatedField +
+              source.slice(argsEnd)
+            );
+          }
+          // No args → inject a new one
+          const updatedField = `${fieldName}(cursor: "${newCursor}")`;
+          return (
+            source.slice(0, matchStart) +
+              updatedField +
+              source.slice(matchEnd)
+          );
+        }
+
+        // Match target field at current depth
+        if (!inString && field && new RegExp(`^\\b${field}\\b`, 'u').test(source.slice(index))) {
           const matchStart = index;
           const matchEnd = index + field.length;
 
-          // Check for arguments
+          // Find args and body
           let argsStart = -1;
           let argsEnd = -1;
           let bodyStart = -1;
 
           index = matchEnd;
 
-          // Skip whitespace
           while (/\s/u.test(source[index])) {
             index++;
           }
 
-          // Check for arguments
+          // Handle arguments
           if (source[index] === '(') {
             argsStart = index;
             let parenCount = 1;
@@ -187,29 +247,27 @@ export class AsyncResourceIterator extends BufferedIterator<Resource> {
             argsEnd = index;
           }
 
-          // Skip whitespace
           while (/\s/u.test(source[index])) {
             index++;
           }
 
-          // Check for body
+          // Handle body
           if (source[index] === '{') {
             bodyStart = index;
           }
 
-          // We’re at the right depth
+          // Leaf field — apply cursor
           if (parts.length === 1) {
             let updatedField = '';
 
             if (argsStart === -1) {
-              // No args, add cursor
               updatedField = `${field}(cursor: "${newCursor}")`;
             } else {
-              // Update existing args
-              const argsStr = source.slice(argsStart + 1, argsEnd - 1)
+              const argsStr = source
+                .slice(argsStart + 1, argsEnd - 1)
                 .split(',')
                 .map(arg => arg.trim())
-                .filter(arg => !arg.startsWith('cursor:'));
+                .filter(arg => arg && !arg.startsWith('cursor:'));
               argsStr.push(`cursor: "${newCursor}"`);
               updatedField = `${field}(${argsStr.join(', ')})`;
             }
@@ -217,7 +275,7 @@ export class AsyncResourceIterator extends BufferedIterator<Resource> {
             return source.slice(0, matchStart) + updatedField + source.slice(index);
           }
 
-          // Recurse into the nested block
+          // Recursive case
           if (bodyStart !== -1) {
             let braceCount = 1;
             let bodyEnd = bodyStart + 1;
@@ -246,5 +304,53 @@ export class AsyncResourceIterator extends BufferedIterator<Resource> {
     }
 
     return insertCursorAtField(query, pathParts);
+  }
+
+  public override getProperty<P>(propertyName: string, callback?: (value: P) => void): P | undefined {
+    if (propertyName === 'metadata') {
+      if (!this.countMetadata) {
+        this.countMetadata = new Promise((resolve, reject) => {
+          const countQuery = this._updateCursorInQuery(this.query);
+          this._query(countQuery).then((response) => {
+            const paginations = response?.extensions?.pagination;
+            // Try to find the pagination object whose path matches the root of the query
+            const rootFieldMatch = /\b([_A-Za-z][_0-9A-Za-z]*)\b\s*(\(|\{)/u.exec(this.query);
+            const rootPath = rootFieldMatch ? `/${rootFieldMatch[1]}` : undefined;
+
+            // If found, look up the total count for that root
+            const rootPageInfo = rootPath ?
+              paginations.find((p: any) => p.path === rootPath) :
+              paginations[0];
+            const totalCount = rootPageInfo?.totalCount;
+
+            if (totalCount) {
+              resolve(<MetadataBindings> {
+                state: new MetadataValidationState(),
+                cardinality: {
+                  type: 'exact',
+                  value: totalCount,
+                  dataset: this.source,
+                },
+                variables: [],
+              });
+            } else {
+              resolve(<MetadataBindings> {
+                state: new MetadataValidationState(),
+                cardinality: {
+                  type: 'estimate',
+                  value: Number.POSITIVE_INFINITY,
+                  dataset: this.source,
+                },
+                variables: [],
+              });
+            }
+          }).catch(reject);
+        });
+      }
+      this.countMetadata
+        .then(metadata => this.setProperty('metadata', metadata))
+        .catch(e => this.emit('error', e));
+    }
+    return super.getProperty(propertyName, callback);
   }
 }
