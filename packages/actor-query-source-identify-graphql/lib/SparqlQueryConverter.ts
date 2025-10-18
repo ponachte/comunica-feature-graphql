@@ -30,6 +30,7 @@ export class SparqlQueryConverter {
     schema_source = `
     scalar BoxedLiteral
     scalar RDFNode
+    scalar DateTime
     ${schema_source}
     `;
     const schema = buildSchema(schema_source);
@@ -210,6 +211,9 @@ class Field {
   }
 
   public withPredNode(pred: string, node: TreeNode): boolean {
+    if (!(pred in this.fieldType.getFields())) {
+      return false;
+    }
     const field = new Field(this.fieldType.getFields()[pred]);
 
     // Literals are only found on leafs
