@@ -33,7 +33,9 @@ export class SparqlQueryConverter {
     scalar DateTime
     ${schema_source}
     `;
-    const schema = buildSchema(schema_source);
+    const schema = buildSchema(schema_source, {
+      assumeValidSDL: true,
+    });
     const queryType = schema.getQueryType() ?? (() => {
       throw new Error('Schema does not define a query type.');
     })();
